@@ -1,0 +1,2228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joshva K — Graphic & UI Designer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --card-bg: #111111;
+            --card-bg-2: #161616;
+            --accent: #ff3131;
+            --accent-2: #cc0000;
+            --accent-3: #ff6b6b;
+            --accent-4: #ff4444;
+            --text-primary: #ffffff;
+            --text-secondary: #999999;
+            --text-muted: #555555;
+            --border-color: #222222;
+            --card-radius: 24px;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none !important;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ========== CUSTOM CURSOR ========== */
+        .cursor-dot {
+            width: 8px; height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none; z-index: 99999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background 0.3s;
+            mix-blend-mode: difference;
+        }
+        .cursor-ring {
+            width: 40px; height: 40px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none; z-index: 99998;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+        }
+        .cursor-dot.hover {
+            width: 60px; height: 60px;
+            background: rgba(255, 49, 49, 0.15);
+        }
+        .cursor-ring.hover {
+            width: 80px; height: 80px;
+            border-color: transparent;
+            background: rgba(255, 49, 49, 0.05);
+        }
+        .cursor-text {
+            position: fixed; pointer-events: none; z-index: 99999;
+            color: var(--accent); font-size: 10px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 2px;
+            opacity: 0; transition: opacity 0.3s;
+            transform: translate(-50%, -50%);
+        }
+        .cursor-text.visible { opacity: 1; }
+
+        /* ========== NOISE OVERLAY ========== */
+        .noise-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 9999; opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        .magnetic-wrap {
+            display: inline-block; position: relative;
+        }
+
+        /* ========== STACKING CARDS ========== */
+        .stack-section {
+            position: relative; min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            padding: 2rem;
+        }
+        .stack-card {
+            position: sticky; top: 40px;
+            background: var(--card-bg);
+            border-radius: var(--card-radius);
+            border: 1px solid var(--border-color);
+            padding: 3rem; min-height: 85vh;
+            display: flex; align-items: center;
+            transition: var(--transition); overflow: hidden; will-change: transform;
+        }
+        .stack-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0; transition: opacity 0.5s;
+        }
+        .stack-card:hover::before { opacity: 1; }
+
+        .stack-card-1 { top: 40px; z-index: 1; background: linear-gradient(135deg, #0a0a0a 0%, #111 100%); }
+        .stack-card-2 { top: 80px; z-index: 2; background: linear-gradient(135deg, #0d0d0d 0%, #131313 100%); }
+        .stack-card-3 { top: 120px; z-index: 3; background: linear-gradient(135deg, #0f0f0f 0%, #151515 100%); }
+        .stack-card-4 { top: 160px; z-index: 4; background: linear-gradient(135deg, #101010 0%, #171717 100%); }
+        .stack-card-5 { top: 200px; z-index: 5; background: linear-gradient(135deg, #111111 0%, #191919 100%); }
+        .stack-card-6 { top: 240px; z-index: 6; background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%); }
+
+        /* ========== HERO SECTION WITH SLIDER ========== */
+        .hero-section {
+            min-height: 100vh; display: flex; align-items: center;
+            justify-content: center; position: relative; overflow: hidden;
+        }
+
+        /* HERO SLIDER */
+        .hero-slider {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+        }
+        .hero-slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; transition: opacity 1.2s ease, transform 6s ease;
+            transform: scale(1.1);
+        }
+        .hero-slide.active {
+            opacity: 1; transform: scale(1);
+        }
+        .hero-slide img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: brightness(0.25) saturate(0.8);
+        }
+        .hero-slide-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(180deg,
+                rgba(10,10,10,0.6) 0%,
+                rgba(10,10,10,0.3) 40%,
+                rgba(10,10,10,0.7) 80%,
+                rgba(10,10,10,0.95) 100%
+            );
+        }
+
+        /* Slider Indicators */
+        .hero-slider-indicators {
+            position: absolute; bottom: 120px; left: 50%;
+            transform: translateX(-50%); z-index: 10;
+            display: flex; gap: 12px;
+        }
+        .slider-dot {
+            width: 40px; height: 4px; border-radius: 2px;
+            background: rgba(255,255,255,0.2);
+            transition: all 0.5s ease; cursor: none !important;
+            border: none; padding: 0;
+        }
+        .slider-dot.active {
+            background: var(--accent); width: 60px;
+        }
+        .slider-dot:hover {
+            background: rgba(255,255,255,0.5);
+        }
+
+        /* Slider Counter */
+        .slider-counter {
+            position: absolute; bottom: 140px; right: 60px; z-index: 10;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem; color: rgba(255,255,255,0.4);
+            letter-spacing: 2px;
+        }
+        .slider-counter .current-slide {
+            font-size: 2rem; font-weight: 800; color: var(--accent);
+            line-height: 1;
+        }
+
+        .hero-bg-grid {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                linear-gradient(rgba(255, 49, 49, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 49, 49, 0.03) 1px, transparent 1px);
+            background-size: 80px 80px;
+            animation: gridMove 20s linear infinite;
+            z-index: 1;
+        }
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(80px, 80px); }
+        }
+
+        .hero-gradient-orb {
+            position: absolute; border-radius: 50%;
+            filter: blur(120px); opacity: 0.2;
+            animation: orbFloat 8s ease-in-out infinite;
+            z-index: 1;
+        }
+        .orb-1 {
+            width: 500px; height: 500px; background: var(--accent);
+            top: -200px; right: -100px;
+        }
+        .orb-2 {
+            width: 400px; height: 400px; background: var(--accent-2);
+            bottom: -150px; left: -100px; animation-delay: -4s;
+        }
+        .orb-3 {
+            width: 300px; height: 300px; background: #ff0000;
+            top: 50%; left: 50%; animation-delay: -2s; opacity: 0.1;
+        }
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        .hero-content {
+            position: relative; z-index: 5;
+        }
+
+        .hero-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 900; line-height: 0.9; letter-spacing: -4px;
+        }
+        .hero-name .line { display: block; overflow: hidden; }
+        .hero-name .line span {
+            display: inline-block;
+            transform: translateY(120%);
+            animation: slideUp 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        }
+        .hero-name .line:nth-child(2) span {
+            animation-delay: 0.15s;
+            -webkit-text-stroke: 2px var(--text-primary);
+            color: transparent;
+        }
+        @keyframes slideUp { to { transform: translateY(0); } }
+
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(255, 49, 49, 0.1);
+            border: 1px solid rgba(255, 49, 49, 0.3);
+            padding: 8px 20px; border-radius: 50px;
+            font-size: 0.85rem; font-weight: 500; color: var(--accent);
+            animation: slideUp 1s cubic-bezier(0.165, 0.84, 0.44, 1) 0.4s forwards;
+            transform: translateY(120%); overflow: hidden;
+        }
+        .hero-badge .pulse-dot {
+            width: 8px; height: 8px; background: var(--accent);
+            border-radius: 50%; animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: var(--text-secondary); font-weight: 300;
+            max-width: 500px; line-height: 1.6;
+            animation: fadeInUp 1s ease 0.6s forwards; opacity: 0;
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(30px); }
+        }
+
+        .scroll-indicator {
+            position: absolute; bottom: 40px; left: 50%;
+            transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            animation: fadeInUp 1s ease 1s forwards; opacity: 0;
+            z-index: 10;
+        }
+        .scroll-indicator span {
+            font-size: 0.7rem; text-transform: uppercase;
+            letter-spacing: 3px; color: var(--text-muted);
+        }
+        .scroll-line {
+            width: 1px; height: 60px;
+            background: var(--border-color); position: relative; overflow: hidden;
+        }
+        .scroll-line::after {
+            content: ''; position: absolute; top: -100%; left: 0;
+            width: 100%; height: 100%; background: var(--accent);
+            animation: scrollLine 2s ease-in-out infinite;
+        }
+        @keyframes scrollLine {
+            0% { top: -100%; }
+            100% { top: 100%; }
+        }
+
+        /* ========== FLOATING SHAPES ========== */
+        .floating-shapes {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; overflow: hidden; z-index: 1;
+        }
+        .floating-shape {
+            position: absolute; opacity: 0.08;
+            animation: float 15s ease-in-out infinite;
+        }
+        .floating-shape:nth-child(1) {
+            top: 20%; left: 10%; width: 60px; height: 60px;
+            border: 2px solid var(--accent); border-radius: 12px;
+            transform: rotate(45deg);
+        }
+        .floating-shape:nth-child(2) {
+            top: 60%; right: 15%; width: 40px; height: 40px;
+            background: var(--accent); border-radius: 50%; animation-delay: -3s;
+        }
+        .floating-shape:nth-child(3) {
+            bottom: 20%; left: 20%; width: 80px; height: 2px;
+            background: #ff0000; animation-delay: -6s;
+        }
+        .floating-shape:nth-child(4) {
+            top: 30%; right: 25%; width: 20px; height: 20px;
+            border: 2px solid var(--accent-3); animation-delay: -9s;
+        }
+        .floating-shape:nth-child(5) {
+            top: 70%; left: 60%; font-size: 2rem; animation-delay: -2s; color: var(--accent);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(5deg); }
+            50% { transform: translateY(10px) rotate(-3deg); }
+            75% { transform: translateY(-15px) rotate(3deg); }
+        }
+
+        /* ========== SECTION LABELS ========== */
+        .section-label {
+            display: inline-flex; align-items: center; gap: 12px;
+            font-size: 0.75rem; text-transform: uppercase;
+            letter-spacing: 4px; color: var(--accent);
+            font-weight: 600; margin-bottom: 2rem;
+        }
+        .section-label::before {
+            content: ''; width: 40px; height: 1px; background: var(--accent);
+        }
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 6rem; font-weight: 900;
+            -webkit-text-stroke: 1px var(--border-color);
+            color: transparent; position: absolute;
+            top: 2rem; right: 3rem; line-height: 1; opacity: 0.5;
+        }
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800; letter-spacing: -2px;
+            line-height: 1.1; margin-bottom: 1.5rem;
+        }
+        .section-title .highlight { color: var(--accent); }
+
+        /* ========== ABOUT SECTION ========== */
+        .about-text {
+            font-size: 1.1rem; line-height: 1.8;
+            color: var(--text-secondary); font-weight: 300;
+        }
+        .about-text strong { color: var(--text-primary); font-weight: 600; }
+
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem; margin-top: 2.5rem;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 16px; padding: 1.5rem; text-align: center;
+            transition: var(--transition); position: relative; overflow: hidden;
+        }
+        .stat-card::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255, 49, 49, 0.05), transparent);
+            opacity: 0; transition: opacity 0.4s;
+        }
+        .stat-card:hover {
+            border-color: rgba(255, 49, 49, 0.3); transform: translateY(-5px);
+        }
+        .stat-card:hover::after { opacity: 1; }
+        .stat-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem; font-weight: 800;
+            color: var(--accent); line-height: 1;
+        }
+        .stat-label {
+            font-size: 0.8rem; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 2px; margin-top: 0.5rem;
+        }
+
+        .about-image-wrapper {
+            position: relative; border-radius: 20px;
+            overflow: hidden; aspect-ratio: 3/4;
+        }
+        .about-image-wrapper img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: grayscale(30%) brightness(0.9);
+            transition: all 0.6s ease;
+        }
+        .about-image-wrapper:hover img {
+            filter: grayscale(0%) brightness(1);
+            transform: scale(1.05);
+        }
+        .about-image-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 2rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+        }
+        .about-image-tag {
+            display: inline-block; background: var(--accent);
+            color: #fff; padding: 6px 16px; border-radius: 50px;
+            font-size: 0.75rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        /* Red corner accent */
+        .about-image-wrapper::before {
+            content: ''; position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            border-radius: 22px; z-index: -1;
+            background: linear-gradient(135deg, var(--accent), transparent 50%);
+        }
+
+        /* ========== SERVICES ========== */
+        .service-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 20px; padding: 2.5rem;
+            transition: var(--transition); position: relative;
+            overflow: hidden; height: 100%;
+        }
+        .service-card::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 49, 49, 0.06), transparent 60%);
+            opacity: 0; transition: opacity 0.4s;
+        }
+        .service-card:hover::before { opacity: 1; }
+        .service-card:hover {
+            border-color: rgba(255, 49, 49, 0.3); transform: translateY(-8px);
+        }
+        .service-icon {
+            width: 70px; height: 70px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+        .service-card:hover .service-icon {
+            transform: scale(1.1) rotate(-5deg);
+        }
+        .si-1 { background: rgba(255, 49, 49, 0.1); color: var(--accent); }
+        .si-2 { background: rgba(255, 49, 49, 0.08); color: #ff5555; }
+        .si-3 { background: rgba(255, 107, 107, 0.1); color: var(--accent-3); }
+        .si-4 { background: rgba(255, 255, 255, 0.05); color: #ffffff; }
+        .service-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem; font-weight: 700; margin-bottom: 0.8rem;
+        }
+        .service-desc {
+            color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;
+        }
+        .service-arrow {
+            position: absolute; top: 2rem; right: 2rem;
+            width: 40px; height: 40px; border-radius: 50%;
+            border: 1px solid var(--border-color);
+            display: flex; align-items: center; justify-content: center;
+            transition: var(--transition); font-size: 1rem;
+        }
+        .service-card:hover .service-arrow {
+            background: var(--accent); border-color: var(--accent);
+            color: #fff; transform: rotate(-45deg);
+        }
+
+        /* ========== TOOLS ========== */
+        .tool-pill {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 12px 24px; border-radius: 50px;
+            font-size: 0.9rem; font-weight: 500;
+            transition: var(--transition); margin: 4px;
+        }
+        .tool-pill:hover {
+            border-color: var(--accent);
+            background: rgba(255, 49, 49, 0.05);
+            color: var(--accent); transform: translateY(-3px);
+        }
+        .tool-pill i { font-size: 1.1rem; }
+
+        /* ========== MARQUEE ========== */
+        .marquee-container {
+            overflow: hidden; white-space: nowrap; margin: 2rem -3rem;
+        }
+        .marquee-track {
+            display: inline-flex;
+            animation: marquee 30s linear infinite;
+        }
+        .marquee-track:hover { animation-play-state: paused; }
+        .marquee-item {
+            padding: 0 3rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 4rem; font-weight: 800;
+            color: var(--border-color);
+            -webkit-text-stroke: 1px var(--border-color);
+            transition: color 0.3s; user-select: none;
+        }
+        .marquee-item:hover {
+            color: var(--accent);
+            -webkit-text-stroke-color: var(--accent);
+        }
+        .marquee-item .dot {
+            display: inline-block; width: 16px; height: 16px;
+            background: var(--accent); border-radius: 50%;
+            margin: 0 2rem; vertical-align: middle;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ========== WORKS / PORTFOLIO ========== */
+        .work-card {
+            position: relative; border-radius: 20px;
+            overflow: hidden; transition: var(--transition);
+            border: 1px solid var(--border-color);
+            display: block;
+        }
+        .work-card.card-tall { aspect-ratio: 3/4; }
+        .work-card.card-wide { aspect-ratio: 16/9; }
+        .work-card.card-square { aspect-ratio: 1/1; }
+        .work-card.card-landscape { aspect-ratio: 4/3; }
+        .work-card:hover {
+            transform: scale(1.02);
+            border-color: rgba(255, 49, 49, 0.4);
+            box-shadow: 0 20px 60px rgba(255, 49, 49, 0.1);
+        }
+        .work-card-img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            filter: brightness(0.8) saturate(1.1);
+        }
+        .work-card:hover .work-card-img {
+            transform: scale(1.1);
+            filter: brightness(0.4) saturate(1.2);
+        }
+        .work-card-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(180deg, transparent 0%, transparent 30%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.85) 100%);
+            transition: all 0.4s ease;
+        }
+        .work-card:hover .work-card-overlay {
+            background: linear-gradient(180deg, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.5) 30%, rgba(10,10,10,0.7) 60%, rgba(10,10,10,0.95) 100%);
+        }
+        .work-card-content {
+            position: absolute; inset: 0; padding: 2rem;
+            display: flex; flex-direction: column;
+            justify-content: flex-end; z-index: 2;
+        }
+        .work-card-tag {
+            align-self: flex-start; background: var(--accent);
+            color: #fff; padding: 5px 14px; border-radius: 50px;
+            font-size: 0.7rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+            transform: translateY(20px); opacity: 0;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition-delay: 0.05s;
+        }
+        .work-card:hover .work-card-tag { transform: translateY(0); opacity: 1; }
+        .work-card-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem; font-weight: 700; color: #fff;
+            transform: translateY(20px); opacity: 0;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition-delay: 0.1s; margin-bottom: 0.3rem;
+        }
+        .work-card:hover .work-card-title { transform: translateY(0); opacity: 1; }
+        .work-card-desc {
+            font-size: 0.85rem; color: var(--text-secondary);
+            transform: translateY(20px); opacity: 0;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition-delay: 0.15s; line-height: 1.5;
+        }
+        .work-card:hover .work-card-desc { transform: translateY(0); opacity: 1; }
+        .work-card-top {
+            position: absolute; top: 0; left: 0; right: 0;
+            padding: 1.5rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 3; opacity: 0; transform: translateY(-10px);
+            transition: all 0.4s ease;
+        }
+        .work-card:hover .work-card-top { opacity: 1; transform: translateY(0); }
+        .work-card-year {
+            font-size: 0.75rem; font-weight: 600;
+            color: rgba(255,255,255,0.6); letter-spacing: 2px;
+        }
+        .work-card-arrow {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.15);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; color: #fff; transition: all 0.3s ease;
+        }
+        .work-card:hover .work-card-arrow {
+            background: var(--accent); border-color: var(--accent);
+            color: #fff; transform: rotate(-45deg);
+        }
+        .work-card-view {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 80px; height: 80px; border-radius: 50%;
+            background: var(--accent); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.7rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 2px; z-index: 4;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .work-card:hover .work-card-view {
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .work-card-techs {
+            display: flex; gap: 6px; flex-wrap: wrap; margin-top: 0.8rem;
+            transform: translateY(20px); opacity: 0;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition-delay: 0.2s;
+        }
+        .work-card:hover .work-card-techs { transform: translateY(0); opacity: 1; }
+        .work-tech-tag {
+            padding: 3px 10px; border-radius: 50px;
+            font-size: 0.65rem; font-weight: 600;
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.7);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .img-skeleton {
+            position: absolute; inset: 0;
+            background: linear-gradient(90deg, var(--card-bg) 25%, var(--card-bg-2) 50%, var(--card-bg) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite; z-index: 0;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .work-card-img.loaded + .img-skeleton { display: none; }
+        .filter-btn {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary); padding: 8px 20px;
+            border-radius: 50px; font-size: 0.8rem; font-weight: 500;
+            transition: all 0.3s ease; cursor: none !important;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent); border-color: var(--accent);
+            color: #fff; transform: translateY(-2px);
+        }
+
+        /* ========== LIGHTBOX MODAL ========== */
+        .lightbox-modal {
+            position: fixed; inset: 0; z-index: 100000;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(20px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden;
+            transition: all 0.4s ease;
+        }
+        .lightbox-modal.active {
+            opacity: 1; visibility: visible;
+        }
+        .lightbox-modal img {
+            max-width: 90vw; max-height: 85vh;
+            object-fit: contain; border-radius: 12px;
+            transform: scale(0.8); transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 30px 80px rgba(255, 49, 49, 0.15);
+        }
+        .lightbox-modal.active img { transform: scale(1); }
+        .lightbox-close {
+            position: absolute; top: 30px; right: 30px;
+            width: 50px; height: 50px; border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff; font-size: 1.3rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s; cursor: none !important;
+        }
+        .lightbox-close:hover {
+            background: var(--accent); border-color: var(--accent);
+        }
+        .lightbox-info {
+            position: absolute; bottom: 40px; left: 50%;
+            transform: translateX(-50%);
+            text-align: center; color: #fff;
+        }
+        .lightbox-info h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem; font-weight: 700;
+        }
+        .lightbox-info p {
+            color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px;
+        }
+        .lightbox-nav {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 50px; height: 50px; border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #fff; font-size: 1.2rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s; cursor: none !important;
+        }
+        .lightbox-nav:hover {
+            background: var(--accent); border-color: var(--accent);
+        }
+        .lightbox-prev { left: 30px; }
+        .lightbox-next { right: 30px; }
+
+        /* ========== TESTIMONIALS ========== */
+        .testimonial-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 20px; padding: 2rem;
+            transition: var(--transition);
+        }
+        .testimonial-card:hover {
+            border-color: rgba(255, 49, 49, 0.3); transform: translateY(-5px);
+        }
+        .testimonial-quote {
+            font-size: 3rem; color: var(--accent);
+            line-height: 1; margin-bottom: 1rem; font-family: serif;
+        }
+        .testimonial-text {
+            color: var(--text-secondary); font-size: 0.95rem;
+            line-height: 1.7; font-style: italic; margin-bottom: 1.5rem;
+        }
+        .testimonial-author {
+            display: flex; align-items: center; gap: 12px;
+        }
+        .testimonial-avatar {
+            width: 44px; height: 44px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.8rem;
+        }
+        .ta-1 { background: rgba(255, 49, 49, 0.15); color: var(--accent); }
+        .ta-2 { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .ta-3 { background: rgba(255, 107, 107, 0.15); color: var(--accent-3); }
+        .testimonial-name { font-weight: 600; font-size: 0.9rem; }
+        .testimonial-role { font-size: 0.75rem; color: var(--text-muted); }
+
+        /* ========== CONTACT ========== */
+        .contact-link {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 2rem 0; border-bottom: 1px solid var(--border-color);
+            text-decoration: none; color: var(--text-primary);
+            transition: var(--transition); position: relative;
+        }
+        .contact-link:hover { padding-left: 1.5rem; color: var(--accent); }
+        .contact-link::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+            width: 0; background: rgba(255, 49, 49, 0.03);
+            transition: width 0.4s; border-radius: 12px;
+        }
+        .contact-link:hover::before { width: 100%; }
+        .contact-link-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-weight: 700; position: relative; z-index: 1;
+        }
+        .contact-link-icon {
+            font-size: 1.5rem; transition: var(--transition);
+            position: relative; z-index: 1;
+        }
+        .contact-link:hover .contact-link-icon { transform: translate(5px, -5px); }
+
+        .contact-form .form-control,
+        .contact-form .form-control:focus {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 16px 20px;
+            color: var(--text-primary); font-size: 0.95rem;
+            transition: var(--transition); box-shadow: none;
+        }
+        .contact-form .form-control:focus {
+            border-color: var(--accent);
+            background: rgba(255, 49, 49, 0.02);
+        }
+        .contact-form .form-control::placeholder { color: var(--text-muted); }
+        .contact-form textarea { resize: none; }
+
+        .btn-primary-custom {
+            background: var(--accent); color: #fff; border: none;
+            padding: 16px 40px; border-radius: 50px;
+            font-weight: 700; font-size: 0.95rem; letter-spacing: 0.5px;
+            transition: var(--transition); position: relative; overflow: hidden;
+        }
+        .btn-primary-custom::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, #cc0000, var(--accent));
+            opacity: 0; transition: opacity 0.4s;
+        }
+        .btn-primary-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(255, 49, 49, 0.4);
+            color: #fff;
+        }
+        .btn-primary-custom:hover::before { opacity: 1; }
+        .btn-primary-custom span { position: relative; z-index: 1; }
+
+        .btn-outline-custom {
+            background: transparent; color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 16px 40px; border-radius: 50px;
+            font-weight: 600; font-size: 0.95rem; transition: var(--transition);
+        }
+        .btn-outline-custom:hover {
+            border-color: var(--accent); color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        /* ========== SOCIAL LINKS ========== */
+        .social-link {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 52px; height: 52px; border-radius: 50%;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary); font-size: 1.2rem;
+            transition: var(--transition); text-decoration: none;
+        }
+        .social-link:hover {
+            border-color: var(--accent); color: var(--accent);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 49, 49, 0.2);
+        }
+
+        /* ========== NAVBAR ========== */
+        .navbar-custom {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            padding: 1.2rem 2rem; transition: var(--transition);
+        }
+        .navbar-custom.scrolled {
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(20px); padding: 0.8rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .nav-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem; font-weight: 800;
+            color: var(--text-primary); text-decoration: none;
+        }
+        .nav-logo span { color: var(--accent); }
+        .nav-links {
+            display: flex; gap: 2.5rem;
+            list-style: none; margin: 0; padding: 0;
+        }
+        .nav-links a {
+            color: var(--text-secondary); text-decoration: none;
+            font-size: 0.85rem; font-weight: 500;
+            letter-spacing: 0.5px; transition: var(--transition); position: relative;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -4px; left: 0;
+            width: 0; height: 2px; background: var(--accent); transition: width 0.3s;
+        }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-cta {
+            background: var(--accent); color: #fff !important;
+            padding: 8px 24px; border-radius: 50px;
+            font-weight: 700 !important; font-size: 0.8rem !important;
+            letter-spacing: 1px; text-transform: uppercase;
+        }
+        .nav-cta::after { display: none !important; }
+        .nav-cta:hover {
+            color: #fff !important;
+            box-shadow: 0 5px 20px rgba(255, 49, 49, 0.4);
+        }
+        .menu-toggle {
+            display: none; background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 8px 12px;
+            color: var(--text-primary); font-size: 1.3rem;
+            transition: var(--transition);
+        }
+        .menu-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* ========== REVEAL ANIMATIONS ========== */
+        .reveal {
+            opacity: 0; transform: translateY(60px);
+            transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .reveal-left {
+            opacity: 0; transform: translateX(-60px);
+            transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .reveal-left.active { opacity: 1; transform: translateX(0); }
+        .reveal-right {
+            opacity: 0; transform: translateX(60px);
+            transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .reveal-right.active { opacity: 1; transform: translateX(0); }
+        .reveal-scale {
+            opacity: 0; transform: scale(0.8);
+            transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .reveal-scale.active { opacity: 1; transform: scale(1); }
+        .delay-1 { transition-delay: 0.1s !important; }
+        .delay-2 { transition-delay: 0.2s !important; }
+        .delay-3 { transition-delay: 0.3s !important; }
+        .delay-4 { transition-delay: 0.4s !important; }
+        .delay-5 { transition-delay: 0.5s !important; }
+        .delay-6 { transition-delay: 0.6s !important; }
+
+        /* ========== TIMELINE ========== */
+        .timeline-item {
+            position: relative; padding-left: 2.5rem;
+            padding-bottom: 2.5rem; border-left: 1px solid var(--border-color);
+        }
+        .timeline-item:last-child { padding-bottom: 0; }
+        .timeline-dot {
+            position: absolute; left: -6px; top: 0;
+            width: 12px; height: 12px; border-radius: 50%;
+            background: var(--accent); border: 2px solid var(--bg-dark);
+        }
+        .timeline-date {
+            font-size: 0.75rem; color: var(--accent);
+            text-transform: uppercase; letter-spacing: 2px; font-weight: 600;
+        }
+        .timeline-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem; font-weight: 700; margin: 0.3rem 0;
+        }
+        .timeline-subtitle { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* ========== FOOTER ========== */
+        .footer-big-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 900; letter-spacing: -4px; line-height: 0.9;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-muted) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .footer-bottom {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-top: 3rem; margin-top: 3rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.8rem; color: var(--text-muted);
+        }
+
+        /* ========== PARTICLES ========== */
+        #particles-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+        }
+
+        /* ========== PROGRESS LINE ========== */
+        .progress-line {
+            position: fixed; top: 0; left: 0; height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            z-index: 10000; transition: width 0.1s;
+        }
+
+        /* ========== AVAILABILITY ========== */
+        .availability-status {
+            position: fixed; bottom: 2rem; right: 2rem;
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(10,10,10,0.9); backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px; border-radius: 50px;
+            font-size: 0.75rem; font-weight: 500; z-index: 999;
+            animation: fadeInUp 1s ease 1.5s forwards; opacity: 0;
+        }
+        .availability-dot {
+            width: 8px; height: 8px; background: var(--accent);
+            border-radius: 50%; animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(255, 49, 49, 0.5);
+        }
+
+        /* ========== TEXT GRADIENT ========== */
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent), #ff6b6b, #fff, var(--accent));
+            background-size: 300% 300%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; animation: gradientShift 5s ease infinite;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ========== RIPPLE ========== */
+        .ripple-effect { position: relative; overflow: hidden; }
+        .ripple {
+            position: absolute; border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transform: scale(0);
+            animation: rippleAnimation 0.6s linear; pointer-events: none;
+        }
+        @keyframes rippleAnimation {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 991px) {
+            .nav-links {
+                display: none; position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(10,10,10,0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column; align-items: center; justify-content: center;
+                gap: 2rem; z-index: 9999;
+            }
+            .nav-links.active { display: flex; }
+            .nav-links a { font-size: 1.5rem; }
+            .menu-toggle { display: block; z-index: 10000; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .stack-card { padding: 2rem; min-height: auto; }
+            .section-number { font-size: 3rem; top: 1rem; right: 1.5rem; }
+            .hero-name { letter-spacing: -2px; }
+            .availability-status { bottom: 1rem; right: 1rem; }
+            .work-card.card-tall, .work-card.card-wide,
+            .work-card.card-square, .work-card.card-landscape { aspect-ratio: 4/3; }
+            .slider-counter { display: none; }
+        }
+        @media (max-width: 576px) {
+            .stack-card { padding: 1.5rem; }
+            .contact-link-text { font-size: 1.2rem; }
+            .work-card.card-tall, .work-card.card-wide,
+            .work-card.card-square, .work-card.card-landscape { aspect-ratio: 3/2; }
+            .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NOISE OVERLAY -->
+    <div class="noise-overlay"></div>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+    <div class="cursor-text" id="cursorText">View</div>
+
+    <!-- PROGRESS LINE -->
+    <div class="progress-line" id="progressLine"></div>
+
+    <!-- PARTICLES CANVAS -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- LIGHTBOX MODAL -->
+    <div class="lightbox-modal" id="lightboxModal">
+        <button class="lightbox-close" id="lightboxClose" onclick="closeLightbox()">
+            <i class="bi bi-x-lg"></i>
+        </button>
+        <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">
+            <i class="bi bi-chevron-left"></i>
+        </button>
+        <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)">
+            <i class="bi bi-chevron-right"></i>
+        </button>
+        <img id="lightboxImg" src="" alt="Project View">
+        <div class="lightbox-info">
+            <h3 id="lightboxTitle"></h3>
+            <p id="lightboxDesc"></p>
+        </div>
+    </div>
+
+    <!-- AVAILABILITY STATUS -->
+    <div class="availability-status">
+        <div class="availability-dot"></div>
+        Available for freelance
+    </div>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar-custom" id="navbar">
+        <div class="container-fluid px-lg-5">
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="#" class="nav-logo magnetic-wrap" data-cursor="hover">
+                    J<span>.</span>K
+                </a>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#about" data-cursor="hover" onclick="closeMenu()">About</a></li>
+                    <li><a href="#services" data-cursor="hover" onclick="closeMenu()">Services</a></li>
+                    <li><a href="#works" data-cursor="hover" onclick="closeMenu()">Works</a></li>
+                    <li><a href="#experience" data-cursor="hover" onclick="closeMenu()">Experience</a></li>
+                    <li><a href="#contact" data-cursor="hover" onclick="closeMenu()">Contact</a></li>
+                    <li><a href="#contact" class="nav-cta" data-cursor="hover" onclick="closeMenu()">Hire Me</a></li>
+                </ul>
+                <button class="menu-toggle" id="menuToggle" data-cursor="hover" onclick="toggleMenu()">
+                    <i class="bi bi-list" id="menuIcon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== HERO SECTION WITH SLIDER ========== -->
+    <section class="hero-section" id="hero">
+        <!-- BACKGROUND SLIDER -->
+        <div class="hero-slider" id="heroSlider">
+            <div class="hero-slide active">
+                <img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=1920&q=80" alt="Design Work 1">
+                <div class="hero-slide-overlay"></div>
+            </div>
+            <div class="hero-slide">
+                <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1920&q=80" alt="Design Work 2">
+                <div class="hero-slide-overlay"></div>
+            </div>
+            <div class="hero-slide">
+                <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=1920&q=80" alt="Design Work 3">
+                <div class="hero-slide-overlay"></div>
+            </div>
+            <div class="hero-slide">
+                <img src="https://images.unsplash.com/photo-1613909207039-6b173b755cc1?w=1920&q=80" alt="Design Work 4">
+                <div class="hero-slide-overlay"></div>
+            </div>
+            <div class="hero-slide">
+                <img src="https://images.unsplash.com/photo-1542744094-3a31f272c490?w=1920&q=80" alt="Design Work 5">
+                <div class="hero-slide-overlay"></div>
+            </div>
+        </div>
+
+        <!-- Slider Indicators -->
+        <div class="hero-slider-indicators" id="sliderIndicators"></div>
+
+        <!-- Slider Counter -->
+        <div class="slider-counter">
+            <span class="current-slide" id="slideCounter">01</span>
+            <span> / 05</span>
+        </div>
+
+        <div class="hero-bg-grid"></div>
+        <div class="hero-gradient-orb orb-1"></div>
+        <div class="hero-gradient-orb orb-2"></div>
+        <div class="hero-gradient-orb orb-3"></div>
+
+        <div class="floating-shapes">
+            <div class="floating-shape"></div>
+            <div class="floating-shape"></div>
+            <div class="floating-shape"></div>
+            <div class="floating-shape"></div>
+            <div class="floating-shape">✦</div>
+        </div>
+
+        <div class="container hero-content">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="mb-4">
+                        <div class="hero-badge">
+                            <div class="pulse-dot"></div>
+                            Graphic & UI Designer
+                        </div>
+                    </div>
+                    <h1 class="hero-name">
+                        <span class="line"><span>Joshva</span></span>
+                        <span class="line"><span>K.</span></span>
+                    </h1>
+                    <div class="mt-4">
+                        <p class="hero-subtitle">
+                            Crafting pixel-perfect digital experiences that blend
+                            <strong style="color:var(--accent)">aesthetics</strong> with
+                            <strong style="color:#ffffff">functionality</strong>.
+                            Based in India, designing for the world.
+                        </p>
+                    </div>
+                    <div class="mt-5" style="animation: fadeInUp 1s ease 0.8s forwards; opacity: 0;">
+                        <a href="#works" class="btn btn-primary-custom me-3 ripple-effect" data-cursor="hover">
+                            <span>View My Work <i class="bi bi-arrow-right ms-2"></i></span>
+                        </a>
+                        <a href="#contact" class="btn btn-outline-custom" data-cursor="hover">
+                            Let's Talk
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- ========== MARQUEE ========== -->
+    <div class="marquee-container" style="margin-top: -2rem; margin-bottom: 0;">
+        <div class="marquee-track">
+            <span class="marquee-item">UI DESIGN <span class="dot"></span></span>
+            <span class="marquee-item">GRAPHIC DESIGN <span class="dot"></span></span>
+            <span class="marquee-item">BRANDING <span class="dot"></span></span>
+            <span class="marquee-item">WEB DESIGN <span class="dot"></span></span>
+            <span class="marquee-item">FIGMA <span class="dot"></span></span>
+            <span class="marquee-item">PHOTOSHOP <span class="dot"></span></span>
+            <span class="marquee-item">ILLUSTRATOR <span class="dot"></span></span>
+            <span class="marquee-item">UI DESIGN <span class="dot"></span></span>
+            <span class="marquee-item">GRAPHIC DESIGN <span class="dot"></span></span>
+            <span class="marquee-item">BRANDING <span class="dot"></span></span>
+            <span class="marquee-item">WEB DESIGN <span class="dot"></span></span>
+            <span class="marquee-item">FIGMA <span class="dot"></span></span>
+            <span class="marquee-item">PHOTOSHOP <span class="dot"></span></span>
+            <span class="marquee-item">ILLUSTRATOR <span class="dot"></span></span>
+        </div>
+    </div>
+
+    <!-- ========== STACKING CARDS BEGIN ========== -->
+    <div class="container-fluid px-lg-5">
+
+        <!-- CARD 1: ABOUT ME -->
+        <section class="stack-section" id="about">
+            <div class="stack-card stack-card-1 w-100">
+                <div class="section-number">01</div>
+                <div class="container-fluid">
+                    <div class="row align-items-center g-5">
+                        <div class="col-lg-5 reveal-left">
+                            <div class="about-image-wrapper tilt-card" data-cursor="view">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80"
+                                     alt="Joshva K — Designer"
+                                     style="width:100%;height:100%;object-fit:cover;">
+                                <div class="about-image-overlay">
+                                    <span class="about-image-tag">✦ That's Me</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="reveal">
+                                <div class="section-label">About Me</div>
+                            </div>
+                            <h2 class="section-title reveal delay-1">
+                                I'm a <span class="highlight">creative designer</span>
+                                who turns ideas into visual stories
+                            </h2>
+                            <p class="about-text reveal delay-2">
+                                Hello! I'm <strong>Joshva K</strong>, a passionate <strong>Graphic & UI Designer</strong>
+                                with a keen eye for detail and a love for creating beautiful, user-centric digital experiences.
+                                I specialize in crafting <strong>brand identities</strong>, <strong>user interfaces</strong>,
+                                and <strong>visual designs</strong> that not only look stunning but also solve real problems.
+                            </p>
+                            <p class="about-text reveal delay-3" style="margin-top: 1rem;">
+                                With expertise in tools like <strong>Figma</strong>, <strong>Adobe Photoshop</strong>,
+                                <strong>Illustrator</strong>, and <strong>After Effects</strong>, I bring concepts to life
+                                with precision and creativity. Every pixel matters, and every design tells a story.
+                            </p>
+
+                            <div class="stats-grid reveal delay-4">
+                                <div class="stat-card" data-cursor="hover">
+                                    <div class="stat-number count-up" data-count="50">0</div>
+                                    <div class="stat-number" style="font-size:1.2rem">+</div>
+                                    <div class="stat-label">Projects Done</div>
+                                </div>
+                                <div class="stat-card" data-cursor="hover">
+                                    <div class="stat-number count-up" data-count="30">0</div>
+                                    <div class="stat-number" style="font-size:1.2rem">+</div>
+                                    <div class="stat-label">Happy Clients</div>
+                                </div>
+                                <div class="stat-card" data-cursor="hover">
+                                    <div class="stat-number count-up" data-count="3">0</div>
+                                    <div class="stat-number" style="font-size:1.2rem">+</div>
+                                    <div class="stat-label">Years Exp.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CARD 2: SERVICES -->
+        <section class="stack-section" id="services">
+            <div class="stack-card stack-card-2 w-100">
+                <div class="section-number">02</div>
+                <div class="container-fluid">
+                    <div class="text-center mb-5">
+                        <div class="section-label justify-content-center reveal" style="display:flex;">What I Do</div>
+                        <h2 class="section-title reveal delay-1">
+                            Services I <span class="highlight">Offer</span>
+                        </h2>
+                        <p class="text-secondary mx-auto reveal delay-2" style="max-width:600px;">
+                            From concept to completion, I deliver design solutions that elevate brands and delight users.
+                        </p>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-lg-3 col-md-6 reveal delay-1">
+                            <div class="service-card ripple-effect" data-cursor="hover">
+                                <div class="service-arrow"><i class="bi bi-arrow-up-right"></i></div>
+                                <div class="service-icon si-1"><i class="bi bi-palette"></i></div>
+                                <h3 class="service-title">UI/UX Design</h3>
+                                <p class="service-desc">Intuitive and beautiful user interfaces with focus on user experience, accessibility, and modern design principles.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 reveal delay-2">
+                            <div class="service-card ripple-effect" data-cursor="hover">
+                                <div class="service-arrow"><i class="bi bi-arrow-up-right"></i></div>
+                                <div class="service-icon si-2"><i class="bi bi-vector-pen"></i></div>
+                                <h3 class="service-title">Graphic Design</h3>
+                                <p class="service-desc">Eye-catching visuals for print and digital media including posters, banners, social media graphics.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 reveal delay-3">
+                            <div class="service-card ripple-effect" data-cursor="hover">
+                                <div class="service-arrow"><i class="bi bi-arrow-up-right"></i></div>
+                                <div class="service-icon si-3"><i class="bi bi-brush"></i></div>
+                                <h3 class="service-title">Brand Identity</h3>
+                                <p class="service-desc">Complete brand identity systems including logos, color palettes, typography, and brand guidelines.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 reveal delay-4">
+                            <div class="service-card ripple-effect" data-cursor="hover">
+                                <div class="service-arrow"><i class="bi bi-arrow-up-right"></i></div>
+                                <div class="service-icon si-4"><i class="bi bi-phone"></i></div>
+                                <h3 class="service-title">Web & App Design</h3>
+                                <p class="service-desc">Modern, responsive website and mobile app designs that combine aesthetics with seamless functionality.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-5 pt-4 reveal delay-5">
+                        <p class="text-secondary mb-3" style="font-size:0.8rem; text-transform:uppercase; letter-spacing:3px;">Tools & Technologies</p>
+                        <div>
+                            <span class="tool-pill" data-cursor="hover"><i class="bi bi-app"></i> Figma</span>
+                            <span class="tool-pill" data-cursor="hover"><i class="bi bi-image"></i> Photoshop</span>
+                            <span class="tool-pill" data-cursor="hover"><i class="bi bi-pen"></i> Illustrator</span>
+                            <span class="tool-pill" data-cursor="hover"><i class="bi bi-play-circle"></i> After Effects</span>
+                            <span class="tool-pill" data-cursor="hover"><i class="bi bi-grid"></i> InDesign</span>
+                            <span class="tool-pill" data-cursor="hover"><i class="bi bi-box"></i> Blender</span>
+                            <span class="tool-pill" data-cursor="hover"><i class="bi bi-filetype-html"></i> HTML/CSS</span>
+                            <span class="tool-pill" data-cursor="hover"><i class="bi bi-bootstrap"></i> Bootstrap</span>
+                            <span class="tool-pill" data-cursor="hover"><i class="bi bi-subtract"></i> Canva</span>
+                            <span class="tool-pill" data-cursor="hover"><i class="bi bi-lightning"></i> Framer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CARD 3: WORKS -->
+        <section class="stack-section" id="works">
+            <div class="stack-card stack-card-3 w-100">
+                <div class="section-number">03</div>
+                <div class="container-fluid">
+                    <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-3">
+                        <div>
+                            <div class="section-label reveal">Selected Works</div>
+                            <h2 class="section-title reveal delay-1 mb-0">
+                                Recent <span class="highlight">Projects</span>
+                            </h2>
+                        </div>
+                        <a href="#" class="btn btn-outline-custom reveal delay-2" data-cursor="hover">
+                            View All <i class="bi bi-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+
+                    <div class="d-flex gap-2 flex-wrap mb-5 reveal delay-2">
+                        <button class="filter-btn active" data-cursor="hover" onclick="filterWorks('all', this)">All</button>
+                        <button class="filter-btn" data-cursor="hover" onclick="filterWorks('ui', this)">UI/UX</button>
+                        <button class="filter-btn" data-cursor="hover" onclick="filterWorks('graphic', this)">Graphic</button>
+                        <button class="filter-btn" data-cursor="hover" onclick="filterWorks('brand', this)">Branding</button>
+                        <button class="filter-btn" data-cursor="hover" onclick="filterWorks('web', this)">Web Design</button>
+                    </div>
+
+                    <div class="row g-4" id="worksGrid">
+                        <!-- PROJECT 1 -->
+                        <div class="col-lg-8 col-md-12 reveal delay-1 work-item" data-category="ui">
+                            <div class="work-card card-wide" data-cursor="view"
+                                 onclick="openLightbox(0)">
+                                <div class="img-skeleton"></div>
+                                <img src="https://images.unsplash.com/photo-1616469829581-73993eb86b02?w=1200&q=80"
+                                     alt="FinTech Mobile App Redesign" class="work-card-img"
+                                     loading="lazy" onload="this.classList.add('loaded')">
+                                <div class="work-card-overlay"></div>
+                                <div class="work-card-top">
+                                    <span class="work-card-year">2024</span>
+                                    <div class="work-card-arrow"><i class="bi bi-arrow-up-right"></i></div>
+                                </div>
+                                <div class="work-card-view">View</div>
+                                <div class="work-card-content">
+                                    <span class="work-card-tag">UI/UX Design</span>
+                                    <h3 class="work-card-title">FinTech Mobile App Redesign</h3>
+                                    <p class="work-card-desc">Complete UI overhaul for a banking app — boosting user engagement by 40%</p>
+                                    <div class="work-card-techs">
+                                        <span class="work-tech-tag">Figma</span>
+                                        <span class="work-tech-tag">Prototyping</span>
+                                        <span class="work-tech-tag">Design System</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PROJECT 2 -->
+                        <div class="col-lg-4 col-md-6 reveal delay-2 work-item" data-category="brand">
+                            <div class="work-card card-tall" data-cursor="view"
+                                 onclick="openLightbox(1)">
+                                <div class="img-skeleton"></div>
+                                <img src="https://images.unsplash.com/photo-1634942537034-2531766767d1?w=800&q=80"
+                                     alt="Luxe Brand Identity" class="work-card-img"
+                                     loading="lazy" onload="this.classList.add('loaded')">
+                                <div class="work-card-overlay"></div>
+                                <div class="work-card-top">
+                                    <span class="work-card-year">2024</span>
+                                    <div class="work-card-arrow"><i class="bi bi-arrow-up-right"></i></div>
+                                </div>
+                                <div class="work-card-view">View</div>
+                                <div class="work-card-content">
+                                    <span class="work-card-tag">Branding</span>
+                                    <h3 class="work-card-title">Luxe Brand Identity</h3>
+                                    <p class="work-card-desc">Premium brand identity for a luxury fashion label</p>
+                                    <div class="work-card-techs">
+                                        <span class="work-tech-tag">Illustrator</span>
+                                        <span class="work-tech-tag">Logo Design</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PROJECT 3 -->
+                        <div class="col-lg-4 col-md-6 reveal delay-3 work-item" data-category="web">
+                            <div class="work-card card-square" data-cursor="view"
+                                 onclick="openLightbox(2)">
+                                <div class="img-skeleton"></div>
+                                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80"
+                                     alt="E-commerce Dashboard" class="work-card-img"
+                                     loading="lazy" onload="this.classList.add('loaded')">
+                                <div class="work-card-overlay"></div>
+                                <div class="work-card-top">
+                                    <span class="work-card-year">2023</span>
+                                    <div class="work-card-arrow"><i class="bi bi-arrow-up-right"></i></div>
+                                </div>
+                                <div class="work-card-view">View</div>
+                                <div class="work-card-content">
+                                    <span class="work-card-tag">Web Design</span>
+                                    <h3 class="work-card-title">E-commerce Dashboard</h3>
+                                    <p class="work-card-desc">Analytics dashboard with real-time data visualization</p>
+                                    <div class="work-card-techs">
+                                        <span class="work-tech-tag">Figma</span>
+                                        <span class="work-tech-tag">Bootstrap</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PROJECT 4 -->
+                        <div class="col-lg-4 col-md-6 reveal delay-4 work-item" data-category="graphic">
+                            <div class="work-card card-square" data-cursor="view"
+                                 onclick="openLightbox(3)">
+                                <div class="img-skeleton"></div>
+                                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&q=80"
+                                     alt="Festival Poster Series" class="work-card-img"
+                                     loading="lazy" onload="this.classList.add('loaded')">
+                                <div class="work-card-overlay"></div>
+                                <div class="work-card-top">
+                                    <span class="work-card-year">2023</span>
+                                    <div class="work-card-arrow"><i class="bi bi-arrow-up-right"></i></div>
+                                </div>
+                                <div class="work-card-view">View</div>
+                                <div class="work-card-content">
+                                    <span class="work-card-tag">Graphic Design</span>
+                                    <h3 class="work-card-title">Festival Poster Series</h3>
+                                    <p class="work-card-desc">Vibrant poster collection for annual music festival</p>
+                                    <div class="work-card-techs">
+                                        <span class="work-tech-tag">Photoshop</span>
+                                        <span class="work-tech-tag">Illustrator</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PROJECT 5 -->
+                        <div class="col-lg-4 col-md-6 reveal delay-5 work-item" data-category="brand">
+                            <div class="work-card card-square" data-cursor="view"
+                                 onclick="openLightbox(4)">
+                                <div class="img-skeleton"></div>
+                                <img src="https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=800&q=80"
+                                     alt="Organic Tea Packaging" class="work-card-img"
+                                     loading="lazy" onload="this.classList.add('loaded')">
+                                <div class="work-card-overlay"></div>
+                                <div class="work-card-top">
+                                    <span class="work-card-year">2023</span>
+                                    <div class="work-card-arrow"><i class="bi bi-arrow-up-right"></i></div>
+                                </div>
+                                <div class="work-card-view">View</div>
+                                <div class="work-card-content">
+                                    <span class="work-card-tag">Packaging</span>
+                                    <h3 class="work-card-title">Organic Tea Packaging</h3>
+                                    <p class="work-card-desc">Eco-friendly packaging design for premium organic teas</p>
+                                    <div class="work-card-techs">
+                                        <span class="work-tech-tag">Illustrator</span>
+                                        <span class="work-tech-tag">InDesign</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PROJECT 6 -->
+                        <div class="col-lg-6 col-md-6 reveal delay-2 work-item" data-category="ui">
+                            <div class="work-card card-landscape" data-cursor="view"
+                                 onclick="openLightbox(5)">
+                                <div class="img-skeleton"></div>
+                                <img src="https://images.unsplash.com/photo-1559028012-481c04fa702d?w=1000&q=80"
+                                     alt="Health & Fitness App" class="work-card-img"
+                                     loading="lazy" onload="this.classList.add('loaded')">
+                                <div class="work-card-overlay"></div>
+                                <div class="work-card-top">
+                                    <span class="work-card-year">2023</span>
+                                    <div class="work-card-arrow"><i class="bi bi-arrow-up-right"></i></div>
+                                </div>
+                                <div class="work-card-view">View</div>
+                                <div class="work-card-content">
+                                    <span class="work-card-tag">UI/UX Design</span>
+                                    <h3 class="work-card-title">Health & Fitness App</h3>
+                                    <p class="work-card-desc">Wellness tracking app with calming visual design & intuitive UX</p>
+                                    <div class="work-card-techs">
+                                        <span class="work-tech-tag">Figma</span>
+                                        <span class="work-tech-tag">User Research</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PROJECT 7 -->
+                        <div class="col-lg-6 col-md-6 reveal delay-3 work-item" data-category="graphic">
+                            <div class="work-card card-landscape" data-cursor="view"
+                                 onclick="openLightbox(6)">
+                                <div class="img-skeleton"></div>
+                                <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1000&q=80"
+                                     alt="Social Media Campaign" class="work-card-img"
+                                     loading="lazy" onload="this.classList.add('loaded')">
+                                <div class="work-card-overlay"></div>
+                                <div class="work-card-top">
+                                    <span class="work-card-year">2023</span>
+                                    <div class="work-card-arrow"><i class="bi bi-arrow-up-right"></i></div>
+                                </div>
+                                <div class="work-card-view">View</div>
+                                <div class="work-card-content">
+                                    <span class="work-card-tag">Graphic Design</span>
+                                    <h3 class="work-card-title">Social Media Campaign</h3>
+                                    <p class="work-card-desc">Bold visual campaign for a lifestyle brand across social platforms</p>
+                                    <div class="work-card-techs">
+                                        <span class="work-tech-tag">Photoshop</span>
+                                        <span class="work-tech-tag">After Effects</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CARD 4: EXPERIENCE & TESTIMONIALS -->
+        <section class="stack-section" id="experience">
+            <div class="stack-card stack-card-4 w-100">
+                <div class="section-number">04</div>
+                <div class="container-fluid">
+                    <div class="row g-5">
+                        <div class="col-lg-6">
+                            <div class="section-label reveal">Experience</div>
+                            <h2 class="section-title reveal delay-1">My <span class="highlight">Journey</span></h2>
+                            <div class="mt-4 reveal delay-2">
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-date">2022 — Present</div>
+                                    <h4 class="timeline-title">Senior UI Designer</h4>
+                                    <p class="timeline-subtitle">Freelance — Remote</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-date">2021 — 2022</div>
+                                    <h4 class="timeline-title">Graphic Designer</h4>
+                                    <p class="timeline-subtitle">Creative Studio — Hybrid</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-date">2020 — 2021</div>
+                                    <h4 class="timeline-title">Junior Designer</h4>
+                                    <p class="timeline-subtitle">Design Agency — On-site</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot" style="background: #fff;"></div>
+                                    <div class="timeline-date" style="color: #fff;">2020</div>
+                                    <h4 class="timeline-title">Design Degree</h4>
+                                    <p class="timeline-subtitle">B.Des in Visual Communication</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="section-label reveal">Testimonials</div>
+                            <h2 class="section-title reveal delay-1">Client <span class="highlight">Love</span></h2>
+                            <div class="d-flex flex-column gap-3 mt-4">
+                                <div class="testimonial-card reveal delay-2" data-cursor="hover">
+                                    <div class="testimonial-quote">"</div>
+                                    <p class="testimonial-text">Joshva transformed our brand completely. His attention to detail and creative vision exceeded all expectations. Truly world-class!</p>
+                                    <div class="testimonial-author">
+                                        <div class="testimonial-avatar ta-1">AK</div>
+                                        <div>
+                                            <div class="testimonial-name">Arjun Kumar</div>
+                                            <div class="testimonial-role">CEO, TechStartup</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="testimonial-card reveal delay-3" data-cursor="hover">
+                                    <div class="testimonial-quote">"</div>
+                                    <p class="testimonial-text">Working with Joshva was incredible. He understood our vision instantly and delivered designs that perfectly captured our brand.</p>
+                                    <div class="testimonial-author">
+                                        <div class="testimonial-avatar ta-2">SP</div>
+                                        <div>
+                                            <div class="testimonial-name">Sarah Parker</div>
+                                            <div class="testimonial-role">Marketing Head, DesignCo</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="testimonial-card reveal delay-4" data-cursor="hover">
+                                    <div class="testimonial-quote">"</div>
+                                    <p class="testimonial-text">The UI designs Joshva created for our app increased user engagement by 40%. His expertise is remarkable.</p>
+                                    <div class="testimonial-author">
+                                        <div class="testimonial-avatar ta-3">MR</div>
+                                        <div>
+                                            <div class="testimonial-name">Mike Rodriguez</div>
+                                            <div class="testimonial-role">Product Manager, AppWorks</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CARD 5: CONTACT -->
+        <section class="stack-section" id="contact">
+            <div class="stack-card stack-card-5 w-100">
+                <div class="section-number">05</div>
+                <div class="container-fluid">
+                    <div class="row g-5">
+                        <div class="col-lg-6">
+                            <div class="section-label reveal">Get In Touch</div>
+                            <h2 class="section-title reveal delay-1">
+                                Let's <span class="gradient-text">Create</span><br>Something Amazing
+                            </h2>
+                            <p class="about-text reveal delay-2">
+                                Have a project in mind? I'd love to hear about it.
+                                Let's chat and bring your vision to life with stunning design.
+                            </p>
+                            <div class="mt-5 reveal delay-3">
+                                <a href="mailto:joshvak@email.com" class="contact-link" data-cursor="hover">
+                                    <span class="contact-link-text">joshvak@email.com</span>
+                                    <span class="contact-link-icon"><i class="bi bi-arrow-up-right"></i></span>
+                                </a>
+                                <a href="tel:+919876543210" class="contact-link" data-cursor="hover">
+                                    <span class="contact-link-text">+91 98765 43210</span>
+                                    <span class="contact-link-icon"><i class="bi bi-arrow-up-right"></i></span>
+                                </a>
+                                <a href="#" class="contact-link" data-cursor="hover">
+                                    <span class="contact-link-text">Behance Portfolio</span>
+                                    <span class="contact-link-icon"><i class="bi bi-arrow-up-right"></i></span>
+                                </a>
+                                <a href="#" class="contact-link" data-cursor="hover">
+                                    <span class="contact-link-text">Dribbble</span>
+                                    <span class="contact-link-icon"><i class="bi bi-arrow-up-right"></i></span>
+                                </a>
+                            </div>
+                            <div class="d-flex gap-3 mt-5 reveal delay-4">
+                                <a href="#" class="social-link" data-cursor="hover"><i class="bi bi-behance"></i></a>
+                                <a href="#" class="social-link" data-cursor="hover"><i class="bi bi-dribbble"></i></a>
+                                <a href="#" class="social-link" data-cursor="hover"><i class="bi bi-instagram"></i></a>
+                                <a href="#" class="social-link" data-cursor="hover"><i class="bi bi-linkedin"></i></a>
+                                <a href="#" class="social-link" data-cursor="hover"><i class="bi bi-twitter-x"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="reveal delay-2">
+                                <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 20px; padding: 2.5rem;">
+                                    <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:700; margin-bottom:0.5rem;">Send a Message</h3>
+                                    <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:2rem;">Fill out the form and I'll get back within 24 hours.</p>
+                                    <form class="contact-form" id="contactForm">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="Your Name" data-cursor="hover">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="email" class="form-control" placeholder="Your Email" data-cursor="hover">
+                                            </div>
+                                            <div class="col-12">
+                                                <input type="text" class="form-control" placeholder="Subject" data-cursor="hover">
+                                            </div>
+                                            <div class="col-12">
+                                                <select class="form-control" data-cursor="hover" style="appearance:auto;">
+                                                    <option value="" disabled selected>Project Type</option>
+                                                    <option>UI/UX Design</option>
+                                                    <option>Graphic Design</option>
+                                                    <option>Brand Identity</option>
+                                                    <option>Web Design</option>
+                                                    <option>Other</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-12">
+                                                <textarea class="form-control" rows="5" placeholder="Tell me about your project..." data-cursor="hover"></textarea>
+                                            </div>
+                                            <div class="col-12">
+                                                <button type="submit" class="btn btn-primary-custom w-100 ripple-effect" data-cursor="hover">
+                                                    <span>Send Message <i class="bi bi-send ms-2"></i></span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CARD 6: FOOTER -->
+        <section class="stack-section" id="footer-section">
+            <div class="stack-card stack-card-6 w-100" style="min-height: auto;">
+                <div class="container-fluid">
+                    <div class="text-center reveal">
+                        <p class="text-secondary mb-4" style="font-size:0.8rem; text-transform:uppercase; letter-spacing:3px;">Thanks for visiting</p>
+                        <div class="footer-big-text">Let's Work<br>Together.</div>
+                        <div class="mt-4">
+                            <a href="#contact" class="btn btn-primary-custom btn-lg ripple-effect" data-cursor="hover">
+                                <span>Start a Project <i class="bi bi-arrow-right ms-2"></i></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="footer-bottom reveal delay-2">
+                        <span>© 2024 Joshva K. All rights reserved.</span>
+                        <span>Designed with <i class="bi bi-heart-fill" style="color: var(--accent);"></i> by Joshva K</span>
+                        <span>
+                            <a href="#hero" style="color:var(--text-muted); text-decoration:none;" data-cursor="hover">
+                                Back to top <i class="bi bi-arrow-up"></i>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ==========================================
+        //  HERO SLIDER
+        // ==========================================
+        const slides = document.querySelectorAll('.hero-slide');
+        const indicatorsContainer = document.getElementById('sliderIndicators');
+        const slideCounterEl = document.getElementById('slideCounter');
+        let currentSlide = 0;
+        let slideInterval;
+
+        // Create indicator dots
+        slides.forEach((_, i) => {
+            const dot = document.createElement('button');
+            dot.className = `slider-dot${i === 0 ? ' active' : ''}`;
+            dot.addEventListener('click', () => goToSlide(i));
+            indicatorsContainer.appendChild(dot);
+        });
+
+        function goToSlide(index) {
+            slides[currentSlide].classList.remove('active');
+            indicatorsContainer.children[currentSlide].classList.remove('active');
+
+            currentSlide = index;
+
+            slides[currentSlide].classList.add('active');
+            indicatorsContainer.children[currentSlide].classList.add('active');
+            slideCounterEl.textContent = String(currentSlide + 1).padStart(2, '0');
+
+            resetSlideTimer();
+        }
+
+        function nextSlide() {
+            goToSlide((currentSlide + 1) % slides.length);
+        }
+
+        function resetSlideTimer() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 4500);
+        }
+
+        resetSlideTimer();
+
+        // ==========================================
+        //  LIGHTBOX SYSTEM
+        // ==========================================
+        const projectData = [
+            {
+                img: 'https://images.unsplash.com/photo-1616469829581-73993eb86b02?w=1600&q=90',
+                title: 'FinTech Mobile App Redesign',
+                desc: 'UI/UX Design — Complete UI overhaul for a banking app'
+            },
+            {
+                img: 'https://images.unsplash.com/photo-1634942537034-2531766767d1?w=1600&q=90',
+                title: 'Luxe Brand Identity',
+                desc: 'Branding — Premium brand identity for a luxury fashion label'
+            },
+            {
+                img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600&q=90',
+                title: 'E-commerce Dashboard',
+                desc: 'Web Design — Analytics dashboard with real-time data visualization'
+            },
+            {
+                img: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1600&q=90',
+                title: 'Festival Poster Series',
+                desc: 'Graphic Design — Vibrant poster collection for annual music festival'
+            },
+            {
+                img: 'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=1600&q=90',
+                title: 'Organic Tea Packaging',
+                desc: 'Packaging — Eco-friendly packaging design for premium organic teas'
+            },
+            {
+                img: 'https://images.unsplash.com/photo-1559028012-481c04fa702d?w=1600&q=90',
+                title: 'Health & Fitness App',
+                desc: 'UI/UX Design — Wellness tracking app with calming visual design'
+            },
+            {
+                img: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1600&q=90',
+                title: 'Social Media Campaign',
+                desc: 'Graphic Design — Bold visual campaign for a lifestyle brand'
+            }
+        ];
+
+        let currentLightboxIndex = 0;
+        const lightboxModal = document.getElementById('lightboxModal');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxTitle = document.getElementById('lightboxTitle');
+        const lightboxDesc = document.getElementById('lightboxDesc');
+
+        function openLightbox(index) {
+            currentLightboxIndex = index;
+            const data = projectData[index];
+            lightboxImg.src = data.img;
+            lightboxImg.alt = data.title;
+            lightboxTitle.textContent = data.title;
+            lightboxDesc.textContent = data.desc;
+            lightboxModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            lightboxModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function navigateLightbox(dir) {
+            currentLightboxIndex = (currentLightboxIndex + dir + projectData.length) % projectData.length;
+            const data = projectData[currentLightboxIndex];
+            lightboxImg.style.opacity = '0';
+            lightboxImg.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                lightboxImg.src = data.img;
+                lightboxImg.alt = data.title;
+                lightboxTitle.textContent = data.title;
+                lightboxDesc.textContent = data.desc;
+                lightboxImg.style.opacity = '1';
+                lightboxImg.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        // Close lightbox with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight' && lightboxModal.classList.contains('active')) navigateLightbox(1);
+            if (e.key === 'ArrowLeft' && lightboxModal.classList.contains('active')) navigateLightbox(-1);
+        });
+
+        // Close lightbox clicking background
+        lightboxModal.addEventListener('click', (e) => {
+            if (e.target === lightboxModal) closeLightbox();
+        });
+
+        // ==========================================
+        //  PORTFOLIO FILTER
+        // ==========================================
+        function filterWorks(category, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const items = document.querySelectorAll('.work-item');
+            items.forEach((item, index) => {
+                const cat = item.getAttribute('data-category');
+                if (category === 'all' || cat === category) {
+                    item.style.transition = `all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) ${index * 0.05}s`;
+                    item.style.opacity = '1';
+                    item.style.transform = 'scale(1) translateY(0)';
+                    item.style.display = '';
+                } else {
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.8) translateY(20px)';
+                    setTimeout(() => { item.style.display = 'none'; }, 400);
+                }
+            });
+        }
+
+        // ==========================================
+        //  IMAGE HOVER PARALLAX
+        // ==========================================
+        document.querySelectorAll('.work-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = (e.clientY - rect.top) / rect.height;
+
+                const img = card.querySelector('.work-card-img');
+                if (img) {
+                    const moveX = (x - 0.5) * -20;
+                    const moveY = (y - 0.5) * -20;
+                    img.style.transform = `scale(1.1) translate(${moveX}px, ${moveY}px)`;
+                }
+                const viewBtn = card.querySelector('.work-card-view');
+                if (viewBtn) {
+                    const btnX = (x - 0.5) * 40;
+                    const btnY = (y - 0.5) * 40;
+                    viewBtn.style.transform = `translate(calc(-50% + ${btnX}px), calc(-50% + ${btnY}px)) scale(1)`;
+                }
+            });
+            card.addEventListener('mouseleave', () => {
+                const img = card.querySelector('.work-card-img');
+                if (img) img.style.transform = 'scale(1) translate(0, 0)';
+                const viewBtn = card.querySelector('.work-card-view');
+                if (viewBtn) viewBtn.style.transform = 'translate(-50%, -50%) scale(0)';
+            });
+        });
+
+        // Image reveal on load
+        document.querySelectorAll('.work-card-img').forEach(img => {
+            img.addEventListener('load', function () {
+                this.style.animation = 'imgReveal 0.6s ease forwards';
+            });
+        });
+        const imgRevealStyle = document.createElement('style');
+        imgRevealStyle.textContent = `
+            @keyframes imgReveal {
+                from { opacity: 0; filter: blur(10px) brightness(0.5); }
+                to { opacity: 1; filter: blur(0) brightness(0.8) saturate(1.1); }
+            }
+        `;
+        document.head.appendChild(imgRevealStyle);
+
+        // ==========================================
+        //  CUSTOM CURSOR
+        // ==========================================
+        const cursorDot = document.getElementById('cursorDot');
+        const cursorRing = document.getElementById('cursorRing');
+        const cursorText = document.getElementById('cursorText');
+        let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorDot.style.left = mouseX + 'px';
+            cursorDot.style.top = mouseY + 'px';
+            cursorText.style.left = mouseX + 'px';
+            cursorText.style.top = (mouseY + 40) + 'px';
+
+            document.querySelectorAll('.service-card').forEach(card => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--mouse-x', ((e.clientX - rect.left) / rect.width * 100) + '%');
+                card.style.setProperty('--mouse-y', ((e.clientY - rect.top) / rect.height * 100) + '%');
+            });
+        });
+
+        function animateCursor() {
+            ringX += (mouseX - ringX) * 0.12;
+            ringY += (mouseY - ringY) * 0.12;
+            cursorRing.style.left = ringX + 'px';
+            cursorRing.style.top = ringY + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        document.querySelectorAll('[data-cursor="hover"]').forEach(el => {
+            el.addEventListener('mouseenter', () => { cursorDot.classList.add('hover'); cursorRing.classList.add('hover'); });
+            el.addEventListener('mouseleave', () => { cursorDot.classList.remove('hover'); cursorRing.classList.remove('hover'); });
+        });
+        document.querySelectorAll('[data-cursor="view"]').forEach(el => {
+            el.addEventListener('mouseenter', () => { cursorDot.classList.add('hover'); cursorRing.classList.add('hover'); cursorText.classList.add('visible'); });
+            el.addEventListener('mouseleave', () => { cursorDot.classList.remove('hover'); cursorRing.classList.remove('hover'); cursorText.classList.remove('visible'); });
+        });
+
+        // ==========================================
+        //  NAVBAR SCROLL & PROGRESS
+        // ==========================================
+        const navbar = document.getElementById('navbar');
+        const progressLine = document.getElementById('progressLine');
+
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 100);
+            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            progressLine.style.width = scrollPercent + '%';
+        });
+
+        // ==========================================
+        //  MOBILE MENU
+        // ==========================================
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            const menuIcon = document.getElementById('menuIcon');
+            navLinks.classList.toggle('active');
+            menuIcon.className = navLinks.classList.contains('active') ? 'bi bi-x-lg' : 'bi bi-list';
+        }
+        function closeMenu() {
+            document.getElementById('navLinks').classList.remove('active');
+            document.getElementById('menuIcon').className = 'bi bi-list';
+        }
+
+        // ==========================================
+        //  SCROLL REVEAL
+        // ==========================================
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
+
+        // ==========================================
+        //  COUNT UP
+        // ==========================================
+        const countObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseInt(el.getAttribute('data-count'));
+                    let current = 0;
+                    const increment = target / 60;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) { current = target; clearInterval(timer); }
+                        el.textContent = Math.floor(current);
+                    }, 30);
+                    countObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+        document.querySelectorAll('.count-up').forEach(el => countObserver.observe(el));
+
+        // ==========================================
+        //  TILT EFFECT
+        // ==========================================
+        document.querySelectorAll('.tilt-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const rotateX = (e.clientY - rect.top - rect.height / 2) / 15;
+                const rotateY = (rect.width / 2 - (e.clientX - rect.left)) / 15;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+            });
+        });
+
+        // ==========================================
+        //  RIPPLE EFFECT
+        // ==========================================
+        document.querySelectorAll('.ripple-effect').forEach(el => {
+            el.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+                ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // ==========================================
+        //  MAGNETIC BUTTONS
+        // ==========================================
+        document.querySelectorAll('.magnetic-wrap').forEach(wrap => {
+            wrap.addEventListener('mousemove', (e) => {
+                const rect = wrap.getBoundingClientRect();
+                wrap.style.transform = `translate(${(e.clientX - rect.left - rect.width / 2) * 0.3}px, ${(e.clientY - rect.top - rect.height / 2) * 0.3}px)`;
+            });
+            wrap.addEventListener('mouseleave', () => { wrap.style.transform = 'translate(0, 0)'; });
+        });
+
+        // ==========================================
+        //  STACKING CARD PARALLAX
+        // ==========================================
+        window.addEventListener('scroll', () => {
+            document.querySelectorAll('.stack-card').forEach(card => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < 0) {
+                    const scale = Math.max(0.9, 1 - Math.abs(rect.top) / 3000);
+                    const brightness = Math.max(0.3, 1 - Math.abs(rect.top) / 2000);
+                    card.style.transform = `scale(${scale})`;
+                    card.style.filter = `brightness(${brightness})`;
+                } else {
+                    card.style.transform = 'scale(1)';
+                    card.style.filter = 'brightness(1)';
+                }
+            });
+        });
+
+        // ==========================================
+        //  PARTICLES BACKGROUND (RED)
+        // ==========================================
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.3 + 0.1;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                const dx = mouseX - this.x, dy = mouseY - this.y;
+                if (Math.sqrt(dx * dx + dy * dy) < 150) { this.x -= dx * 0.01; this.y -= dy * 0.01; }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 49, 49, ${this.opacity})`;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 60; i++) particles.push(new Particle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            // Draw lines
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(255, 49, 49, ${0.05 * (1 - dist / 120)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // ==========================================
+        //  SMOOTH SCROLLING
+        // ==========================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // ==========================================
+        //  PARALLAX ON HERO ORBS
+        // ==========================================
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 2;
+            const y = (e.clientY / window.innerHeight - 0.5) * 2;
+            document.querySelectorAll('.hero-gradient-orb').forEach((orb, i) => {
+                orb.style.transform = `translate(${x * (i + 1) * 15}px, ${y * (i + 1) * 15}px)`;
+            });
+            document.querySelectorAll('.floating-shape').forEach((shape, i) => {
+                shape.style.transform = `translate(${x * (i + 1) * 8}px, ${y * (i + 1) * 8}px)`;
+            });
+        });
+
+        // ==========================================
+        //  HERO SCROLL PARALLAX
+        // ==========================================
+        window.addEventListener('scroll', () => {
+            const hero = document.querySelector('.hero-section');
+            if (hero) {
+                hero.style.transform = `translateY(${window.scrollY * 0.3}px)`;
+                hero.style.opacity = 1 - window.scrollY / 800;
+            }
+        });
+
+        // ==========================================
+        //  FORM SUBMIT
+        // ==========================================
+        document.getElementById('contactForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"] span');
+            btn.innerHTML = 'Message Sent! <i class="bi bi-check-circle ms-2"></i>';
+            btn.closest('button').style.background = '#00cc44';
+            setTimeout(() => {
+                btn.innerHTML = 'Send Message <i class="bi bi-send ms-2"></i>';
+                btn.closest('button').style.background = '';
+                e.target.reset();
+            }, 3000);
+        });
+
+        console.log('%c Designed by Joshva K ', 'background: #ff3131; color: #fff; font-size: 16px; font-weight: bold; padding: 10px 20px; border-radius: 8px;');
+    </script>
+
+</body>
+</html>
